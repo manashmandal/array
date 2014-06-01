@@ -24,6 +24,7 @@
 #define __ARRAY_H__
 
 #include "Arduino.h"
+#include "algorithm.h"
 
 #define SemiRegular typename // T() = 
 #define Regular typename  // T() = == !=  
@@ -41,61 +42,56 @@ struct array {
   typedef const T* const_iterator;
 private:
   value_type data[S];
+  #define first data
   iterator last;
-  #define first data    // const_iterator would consume more memory :(
+  #define end_of_storage data+S
 public:
   array() : last(first) {}
-  array(iterator f, iterator l) : last(first) {
-    while (l - f > S) --l; // (fast?) bound protection;
-    while (f != l) {
-      *last = *f;
-      ++last;
-      ++f;
-    }
+  array(const size_type& cap) : last(first) { reserve(cap); }
+  array(iterator s_first, iterator s_last) : last(first) {
+    last = copy(s_first, s_last, first, end_of_storage);
+  }
+  array(const_iterator s_first, const_iterator s_last) : last(first) {
+    last = copy(s_first, s_last, first, end_of_storage);
   }
 
-  // Bound checking access. (Slow) 
-  void push_back(const_reference val) {
+  void push_back(const_reference value) {
     if (full()) return;
-    *last = val;
+    *last = value;
     ++last;  
   }
   void pop_back() { 
     if (empty()) return;
     --last; 
   }
-
-  reference operator[](const size_type& i) { return *(begin() + i); }
-  const_reference operator[](const size_type& i) const { return *(begin() + i); }
+  
+  reference operator[](const size_type& i) { return *(first + i); }
+  const_reference operator[](const size_type& i) const { return *(first + i); }
 
   size_type size() const { return (last - first); } 
   size_type max_size() const { return S; } 
   bool empty() const { return first == last; } 
-  bool full() const { return last == (first + S); }
+  bool full() const { return last == data+S; }
+  void reserve(const size_type& new_cap) { 
+    if (new_cap > S) return;
+    last = first + new_cap;
+  }
 
-  friend
-  iterator begin(array& x) { return x.begin(); }
   iterator begin() { return first; }
-
-  friend
-  const_iterator begin(const array& x) { return x.begin(); }
   const_iterator begin() const { return first; }
 
-  friend
-  iterator end(array& x) { return x.end(); }
-  iterator end() { return last; }
+  friend 
+  iterator begin(array& x) { return x.begin(); }
+  friend 
+  const_iterator begin(const array& x) { return x.begin(); }
 
-  friend
-  const_iterator end(const array& x) { return x.end(); }
+  iterator end() { return last; }
   const_iterator end() const { return last; }
 
-  friend
-  iterator bound(array& x) { return x.bound(); }
-  iterator bound() { return (data + S); }
-
-  friend
-  const_iterator bound(const array& x) { return x.bound(); }
-  const_iterator bound() const { return (data + S); }
+  friend 
+  iterator end(array& x) { return x.end(); }
+  friend 
+  const_iterator end(const array& x) { return x.end(); }
 };
 
 template <Regular T, size_t S>
@@ -153,7 +149,5 @@ template <TotallyOrdered T, size_t S>
 bool operator>=(array<T, S>& x, array<T, S>& y) {
   return !(x < y);
 }
-
-
 
 #endif
