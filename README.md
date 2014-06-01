@@ -17,11 +17,7 @@ Usage
       int x[] = {0, 1, 2, 3, 4, 5, 6, 7};
       array<int, 10> y(x, x+8); // y now have {0, 1, 2, 3, 4, 5, 6, 7}
       array<int, 3> z(begin(y), end(y)); // z now have {0, 1, 2}     
-
-- Iterators
-
-  (1) Get first element iterator:    iterator begin(array& x);
-
+      
 
 - Insert/Remove Element at end with bound checking (slow):
 
@@ -42,23 +38,6 @@ Usage
       x.pop_back();
       // x = {150}
       
-      
-- Insert/Remove Element at end without bound checking (fast):
-
-   (1) Iterator Deference, Increment and Decrement. 
-   
-      // Should be used when implementing algorithms.
-      array<int, 10> x;
-      array<int, 10>::iterator it = x.end();
-      for (uint8_t i = 0; i < 5; ++i) {
-        *it = i;  
-        ++it;
-      }
-      // x = {1, 2, 3, 4, 5}
-      
-      --it;
-      // x = {1, 2, 3, 4}
-
 
 - Capacity
 
@@ -86,3 +65,47 @@ Usage
       }
       x.full(); // will return true;
       
+
+- Iterators
+
+  (1) Get an Iterator to the First Element :    iterator begin(array& x);
+
+      array<int, 10> x; 
+      begin(x); // returns a pointer to x[0];
+      
+  (2) Get an Iterator to the Last Element:    iterator end(array& x);
+
+      array<int, 10> x; 
+      end(x); // returns a pointer to x[0];
+      x.push_back(4);
+      end(x); // returns a pointer to x[1];
+      
+  (2) Get an Iterator to the Boundary Element:    iterator bound(array& x);
+
+      /* Note that x[10] should never be dereferenced, 
+         it just marks the end of the container in memory!!
+      */
+      array<int, 10> x; 
+      bound(x); // returns a pointer to x[10];
+      x.push_back(4);
+      end(x); // returns a pointer to x[10];
+      
+            
+- Insert/Remove Element at end without bound checking (fast):
+
+  (1) Iterator Dereference, Increment and Decrement. 
+   
+      // Should be used when implementing algorithms.
+      array<int, 10> x;
+      array<int, 10>::iterator it = end(x); // generic usage
+      // or in this case:
+      // int* it = end(x);
+      
+      for (uint8_t i = 0; i < 5; ++i) {
+        *it = i;  
+        ++it;
+      }
+      // x = {1, 2, 3, 4, 5}
+      
+      --it;
+      // x = {1, 2, 3, 4}
