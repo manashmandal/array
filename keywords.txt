@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For Array
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+array KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+push_back KEYWORD2
+pop_back KEYWORD2
+size KEYWORD2
+max_size KEYWORD2
+empty KEYWORD2
+full KEYWORD2
+begin KEYWORD2
+end KEYWORD2
+bound KEYWORD2

@@ -16,7 +16,7 @@ Usage
   
       int x[] = {0, 1, 2, 3, 4, 5, 6, 7};
       array<int, 10> y(x, x+8); // y now have {0, 1, 2, 3, 4, 5, 6, 7}
-      array<int, 3> z(begin(y), end(y)); // z now have {0, 1, 2}     
+      array<int, 3> z(begin(y), end(y)); // z now have {0, 1, 2}
       
 
 - Insert/Remove Element at end with bound checking (slow):
@@ -102,7 +102,7 @@ Usage
       // int* it = end(x);
       
       for (uint8_t i = 0; i < 5; ++i) {
-        *it = i;  
+        *it = i;
         ++it;
       }
       // x = {1, 2, 3, 4, 5}
